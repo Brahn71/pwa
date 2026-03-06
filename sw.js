@@ -20,12 +20,15 @@ const urlsToCache = [
 
 
 self.addEventListener('install', (e) => {
-  e.waitUntil(
-    caches.open(CACHE_NAME)
-      .then((cache) => cache.addAll(urlsToCache))
-      .then(() => self.skipWaiting())
-      .catch((err) => console.log('No se ha registrado el cache', err))
-  );
+  e.waitUntil((async () => {
+    const cache = await caches.open(CACHE_NAME);
+    const results = await Promise.allSettled(
+      urlsToCache.map((url) => cache.add(url))
+    );
+    const failed = results.filter(r => r.status === "rejected");
+    if (failed.length) console.log("Algunos recursos no se cachearon:", failed.length);
+    self.skipWaiting();
+  })());
 });
 
 
