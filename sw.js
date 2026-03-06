@@ -19,16 +19,15 @@ const urlsToCache = [
 
 
 
-self.addEventListener('install', e => {
-    e.waitUntil(
-        caches.open(CACHE_NAME)
-            .then(cache => {
-                return cache.addAll(urlsToCache)
-                    .then(() => self.skipWaiting())
-            })
-            .catch(err => console.log('No se ha registrado el cache', err))
-    );
+self.addEventListener('install', (e) => {
+  e.waitUntil(
+    caches.open(CACHE_NAME)
+      .then((cache) => cache.addAll(urlsToCache))
+      .then(() => self.skipWaiting())
+      .catch((err) => console.log('No se ha registrado el cache', err))
+  );
 });
+
 
 // Evento activate (limpia caches anteriores)
 self.addEventListener('activate', (e) => {
